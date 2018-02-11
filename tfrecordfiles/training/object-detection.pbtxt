@@ -1,0 +1,14 @@
+item {
+  id: 1
+  name: 'myst_case'
+}
+
+item {
+  id: 2
+  name: 'mob'
+}
+
+item {
+  id: 3
+  name: 'loot'
+}

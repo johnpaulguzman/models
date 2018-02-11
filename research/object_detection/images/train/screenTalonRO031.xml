@@ -1,0 +1,26 @@
+<annotation>
+	<folder>ScreenShot</folder>
+	<filename>screenTalonRO031.jpg</filename>
+	<path>/home/jp/Repositories/ScreenShot/screenTalonRO031.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1280</width>
+		<height>720</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>myst_case</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>781</xmin>
+			<ymin>342</ymin>
+			<xmax>844</xmax>
+			<ymax>418</ymax>
+		</bndbox>
+	</object>
+</annotation>

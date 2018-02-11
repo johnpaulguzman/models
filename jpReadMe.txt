@@ -8,8 +8,10 @@ git pull upstream master
 pip install pipenv
 pipenv --python 3.6
 pipenv shell
+pip install tensorflow pillow lxml jupyter matplotlib opencv-contrib-python mss Xlib pyautogui pandas
+cd research/
 export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
-pip install tensorflow pillow lxml jupyter matplotlib opencv-contrib-python mss Xlib pyautogui
-cd research/object_detection/
+python setup.py install
+cd object_detection/
 python robot.py
 ######################################################################
