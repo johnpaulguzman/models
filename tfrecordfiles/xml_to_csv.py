@@ -3,6 +3,10 @@ import glob
 import pandas as pd
 import xml.etree.ElementTree as ET
 
+"""
+Usage:
+  python xml_to_csv.py
+"""
 
 def xml_to_csv(path, directory):
     xml_list = []

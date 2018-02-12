@@ -41,6 +41,18 @@ Example usage:
         --input_config_path=train_input_config.pbtxt
 """
 
+r"""
+python train.py \
+    --logtostderr \
+    --train_dir=training/ \
+    --pipeline_config_path=training/ssd_mobilenet_v1_coco.config
+"""
+import sys, os
+sys.path.append(os.path.join(os.getcwd()))
+sys.path.append(os.path.join(os.getcwd(), '..'))
+sys.path.append(os.path.join(os.getcwd(), '..', 'slim'))
+# tensorboard --logdir=training/
+
 import functools
 import json
 import os

@@ -1,6 +1,5 @@
 """
 Usage:
-  # From tensorflow/models/
   # Create train data:
   python generate_tfrecord.py --csv_input=data/train_labels.csv  --output_path=data/train.record
 

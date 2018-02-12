@@ -66,6 +66,20 @@ with contents:
  - frozen_inference_graph.pb
  + saved_model (a directory)
 """
+
+r"""
+python export_inference_graph.py \
+    --input_type image_tensor \
+    --pipeline_config_path training/ssd_mobilenet_v1_coco.config \
+    --trained_checkpoint_prefix path/to/model.ckpt \
+    --output_directory path/to/exported_model_directory
+"""
+
+import sys, os
+sys.path.append(os.path.join(os.getcwd()))
+sys.path.append(os.path.join(os.getcwd(), '..'))
+sys.path.append(os.path.join(os.getcwd(), '..', 'slim'))
+
 import tensorflow as tf
 from google.protobuf import text_format
 from object_detection import exporter
