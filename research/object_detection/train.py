@@ -47,6 +47,7 @@ python train.py \
     --train_dir=training/ \
     --pipeline_config_path=training/ssd_mobilenet_v1_coco.config
 """
+
 import sys, os
 sys.path.append(os.path.join(os.getcwd()))
 sys.path.append(os.path.join(os.getcwd(), '..'))

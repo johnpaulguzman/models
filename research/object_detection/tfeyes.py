@@ -27,8 +27,6 @@ from utils import visualization_utils as vis_util
 
 
 print("Model preparation")
-
-
 # ## Variables
 #
 # Any model exported using the `export_inference_graph.py` tool can be loaded here simply by changing `PATH_TO_CKPT` to point to a new .pb file.
@@ -37,32 +35,18 @@ print("Model preparation")
 
 
 # What model to download.
-MODEL_NAME = 'ssd_mobilenet_v1_coco_2017_11_17'
-MODEL_FILE = MODEL_NAME + '.tar.gz'
-DOWNLOAD_BASE = 'http://download.tensorflow.org/models/object_detection/'
+MODEL_NAME = 'training_output'
 
 # Path to frozen detection graph. This is the actual model that is used for the object detection.
 PATH_TO_CKPT = MODEL_NAME + '/frozen_inference_graph.pb'
 
 # List of the strings that is used to add correct label for each box.
-PATH_TO_LABELS = os.path.join('data', 'mscoco_label_map.pbtxt')
-
-NUM_CLASSES = 3
-
-
-#print("Download Model")
-#opener = urllib.request.URLopener()
-#opener.retrieve(DOWNLOAD_BASE + MODEL_FILE, MODEL_FILE)
-#tar_file = tarfile.open(MODEL_FILE)
-#for file in tar_file.getmembers():
-#    file_name = os.path.basename(file.name)
-#    if 'frozen_inference_graph.pb' in file_name:
-#        tar_file.extract(file, os.getcwd())
+LABELS_PBTXT = 'object-detection.pbtxt'
+NUM_CLASSES = 2
+PATH_TO_LABELS = os.path.join('data', LABELS_PBTXT)
 
 
 print("Load a (frozen) Tensorflow model into memory.")
-
-
 detection_graph = tf.Graph()
 with detection_graph.as_default():
     od_graph_def = tf.GraphDef()
@@ -102,6 +86,7 @@ class TFEyes:
     def __init__(self):
         self.data_points = []
         self.do_print = False
+        self.do_live_view = False
 
     def process_labelled_boxes(self, labelled_boxes, orig_size):
         #print(labelled_boxes)
@@ -163,14 +148,21 @@ class TFEyes:
                                 line_thickness=8)
                             self.process_labelled_boxes(labelled_boxes, img.size)
                             
-                            #shrink_factor = 0.5
-                            #display_image = image_np
-                            #display_image = cv2.resize(display_image, None, fx=shrink_factor, fy=shrink_factor)
-                            #display_image = cv2.cvtColor(display_image, cv2.COLOR_BGR2RGB)
-                            #cv2.imshow('live_detection', display_image)
-                            #if cv2.waitKey(25) & 0xFF == ord('q'):
-                            #    break
-                            #    cv2.destroyAllWindows()
-                            #    cap.release()
+                            if self.do_live_view:
+                                shrink_factor = 0.5
+                                display_image = image_np
+                                display_image = cv2.resize(display_image, None, fx=shrink_factor, fy=shrink_factor)
+                                display_image = cv2.cvtColor(display_image, cv2.COLOR_BGR2RGB)
+                                cv2.imshow('live_detection', display_image)
+                                if cv2.waitKey(25) & 0xFF == ord('q'):
+                                    break
+                                    cv2.destroyAllWindows()
+                                    cap.release()
                         except KeyboardInterrupt as e:
                             import code; code.interact(local=dict(globals(), **locals()))
+
+if __name__ == "__main__":
+    my_eyes = TFEyes()
+    my_eyes.do_live_view = True
+    my_eyes.do_print = True
+    my_eyes.start_watching()

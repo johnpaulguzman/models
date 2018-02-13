@@ -71,8 +71,8 @@ r"""
 python export_inference_graph.py \
     --input_type image_tensor \
     --pipeline_config_path training/ssd_mobilenet_v1_coco.config \
-    --trained_checkpoint_prefix path/to/model.ckpt \
-    --output_directory path/to/exported_model_directory
+    --trained_checkpoint_prefix training/model.ckpt-1215 \
+    --output_directory training_output
 """
 
 import sys, os
