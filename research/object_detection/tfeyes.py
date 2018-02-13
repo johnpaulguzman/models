@@ -82,9 +82,15 @@ def process_label(label):
         pass
     return (None, None)
 
+sct = mss()
+sess = None
+with detection_graph.as_default():
+    sess = tf.Session(graph=detection_graph)
+	
 class TFEyes:
-    def __init__(self):
+    def __init__(self, min_score_thresh):
         self.data_points = []
+        self.min_score_thresh = min_score_thresh
         self.do_print = False
         self.do_live_view = False
 
@@ -104,65 +110,56 @@ class TFEyes:
 
     def start_watching(self):
         with detection_graph.as_default():
-            with tf.Session(graph=detection_graph) as sess:
-                with mss() as sct:
-                    while (True):
-                        try:
-                            sct_img = sct.grab(sct.monitors[0]) 
-                            img = Image.frombytes('RGB', sct_img.size, sct_img.rgb)
-                            image_np = np.array(img)
+            sct_img = sct.grab(sct.monitors[0]) 
+            img = Image.frombytes('RGB', sct_img.size, sct_img.rgb)
+            image_np = np.array(img)
             
-                            # Definite input and output Tensors for detection_graph
-                            image_tensor = detection_graph.get_tensor_by_name(
-                                'image_tensor:0')
-                            # Each box represents a part of the image where a particular object was detected.
-                            detection_boxes = detection_graph.get_tensor_by_name(
-                                'detection_boxes:0')
-                            # Each score represent how level of confidence for each of the objects.
-                            # Score is shown on the result image, together with the class label.
-                            detection_scores = detection_graph.get_tensor_by_name(
-                                'detection_scores:0')
-                            detection_classes = detection_graph.get_tensor_by_name(
-                                'detection_classes:0')
-                            num_detections = detection_graph.get_tensor_by_name(
-                                'num_detections:0')
-                            # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
-                            image_np_expanded = np.expand_dims(image_np, axis=0)
-                            # Actual detection.
-                            (boxes, scores, classes, num) = sess.run(
-                                [detection_boxes, detection_scores,
-                                    detection_classes, num_detections],
-                                feed_dict={image_tensor: image_np_expanded})
-                            # Visualization of the results of a detection.
-                            box_limit = 4
-                            labelled_boxes = {}
-                            vis_util.visualize_boxes_and_labels_on_image_array(
-                                image_np,
-                                np.squeeze(boxes),
-                                np.squeeze(classes).astype(np.int32),
-                                np.squeeze(scores),
-                                category_index,
-                                max_boxes_to_draw=box_limit, ###
-                                box_str_dict_ref=labelled_boxes, ###
-                                use_normalized_coordinates=True,
-                                line_thickness=8)
-                            self.process_labelled_boxes(labelled_boxes, img.size)
-                            
-                            if self.do_live_view:
-                                shrink_factor = 0.5
-                                display_image = image_np
-                                display_image = cv2.resize(display_image, None, fx=shrink_factor, fy=shrink_factor)
-                                display_image = cv2.cvtColor(display_image, cv2.COLOR_BGR2RGB)
-                                cv2.imshow('live_detection', display_image)
-                                if cv2.waitKey(25) & 0xFF == ord('q'):
-                                    break
-                                    cv2.destroyAllWindows()
-                                    cap.release()
-                        except KeyboardInterrupt as e:
-                            import code; code.interact(local=dict(globals(), **locals()))
+            # Definite input and output Tensors for detection_graph
+            image_tensor = detection_graph.get_tensor_by_name(
+                'image_tensor:0')
+            # Each box represents a part of the image where a particular object was detected.
+            detection_boxes = detection_graph.get_tensor_by_name(
+                'detection_boxes:0')
+            # Each score represent how level of confidence for each of the objects.
+            # Score is shown on the result image, together with the class label.
+            detection_scores = detection_graph.get_tensor_by_name(
+                'detection_scores:0')
+            detection_classes = detection_graph.get_tensor_by_name(
+                'detection_classes:0')
+            num_detections = detection_graph.get_tensor_by_name(
+                'num_detections:0')
+            # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
+            image_np_expanded = np.expand_dims(image_np, axis=0)
+            # Actual detection.
+            (boxes, scores, classes, num) = sess.run(
+                [detection_boxes, detection_scores,
+                    detection_classes, num_detections],
+                feed_dict={image_tensor: image_np_expanded})
+            # Visualization of the results of a detection.
+            box_limit = 4
+            labelled_boxes = {}
+            vis_util.visualize_boxes_and_labels_on_image_array(
+                image_np,
+                np.squeeze(boxes),
+                np.squeeze(classes).astype(np.int32),
+                np.squeeze(scores),
+                category_index,
+                min_score_thresh=self.min_score_thresh, ###
+                max_boxes_to_draw=box_limit, ###
+                box_str_dict_ref=labelled_boxes, ###
+                use_normalized_coordinates=True,
+                line_thickness=8)
+            self.process_labelled_boxes(labelled_boxes, img.size)
+            
+            if self.do_live_view:
+                shrink_factor = 0.5
+                display_image = image_np
+                display_image = cv2.resize(display_image, None, fx=shrink_factor, fy=shrink_factor)
+                display_image = cv2.cvtColor(display_image, cv2.COLOR_BGR2RGB)
+                cv2.imshow('live_detection', display_image)
 
 if __name__ == "__main__":
-    my_eyes = TFEyes()
-    my_eyes.do_live_view = True
+    my_eyes = TFEyes(0.5)
+    my_eyes.do_live_view = False
     my_eyes.do_print = True
     my_eyes.start_watching()
