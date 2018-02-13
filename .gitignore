@@ -1,5 +1,5 @@
 /research/object_detection/training
-# /research/object_detection/ssd_mobilenet_v1_coco_11_06_2017/model.ckpt.data-00000-of-00001
+/research/object_detection/ssd_mobilenet_v1_coco_11_06_2017/model.ckpt.data-00000-of-00001
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
