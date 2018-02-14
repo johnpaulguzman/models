@@ -74,7 +74,7 @@ python export_inference_graph.py \
     --trained_checkpoint_prefix training/model.ckpt-XXXX \
     --output_directory training_output
 
-python export_inference_graph.py --input_type image_tensor --pipeline_config_path training/ssd_mobilenet_v1_coco.config --trained_checkpoint_prefix training/model.ckpt-4034 --output_directory training_output
+python export_inference_graph.py --input_type image_tensor --pipeline_config_path training/ssd_mobilenet_v1_coco.config --trained_checkpoint_prefix training/model.ckpt-5605 --output_directory training_output
 """
 
 import sys, os
