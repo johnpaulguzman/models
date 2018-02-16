@@ -32,26 +32,46 @@ def autobuff2():
     pyautogui.press('f8')
 thread_buff2 = autobuff2()
 
-sensory_threads = []
-my_eyes = TFEyes(0.85)
-# thread_eye = threading.Thread(name='threadEye', target=my_eyes.start_watching, daemon=True)
-# sensory_threads += [thread_eye]
-# for thread in sensory_threads: thread.start()
-
+confidence_threshold = 0.85
+my_eyes = TFEyes(confidence_threshold)
 my_eyes.do_print = True
 
 cycle_wait = 1
-kill_wait = 8
+kill_wait = 9
 tele_cycles = 3
-cycle_timeout = 30
+cycle_timeout = 20
+############################# CHANGE HERE ####################################################################
 center_mouse = (716, 380)
+hp_position = (181, 77)
+missing_hp_color = (189, 197, 206)
 tele_key = 'q'
+green_key = 'f1'
+green_times = 6
+############################# CHANGE HERE ####################################################################
+
+def evadeAction():
+    print("Evading")
+    presses = [tele_key] + [green_key] * green_times
+    for key in presses:
+        pyautogui.press(key)
+        time.sleep(1)
+
+def runaf():
+    while True:
+        #print("RUNNING")
+        time.sleep(0.25)
+        if pyautogui.pixel(*hp_position) == missing_hp_color:
+            evadeAction()
+
+
+thread_af = threading.Thread(name='thread-runaf', target=runaf, daemon=True)
+thread_af.start()
 
 def clickAction(location):
     print("Clicking at {}".format(location))
     pyautogui.click(location)
     time.sleep(kill_wait)
-    pyautogui.click(center_mouse, clicks=2, interval=0.1)
+    pyautogui.click(center_mouse, clicks=2, interval=1)
 
 def teleAction():
     print("Teleporting")
@@ -90,19 +110,3 @@ while True:
     except Exception as e:
         print(e)
         import code; code.interact(local=dict(globals(), **locals()))
-
-# for thread in sensory_threads: thread.join()
-
-"""
-import threading
-from time import time
-
-def wattim():
-	while True:
-		t = time()
-		if t%10==0: print("its been 10 sec")
-		if t%2==0: print("its been 2 sec")
-
-thread_eye = threading.Thread(name='timer', target=wattim)
-thread_eye.start()
-"""
